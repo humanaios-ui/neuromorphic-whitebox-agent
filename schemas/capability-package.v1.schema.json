@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://humanaios.ai/schemas/capability-package.v1.schema.json",
+  "title": "Capability Package (CPK-*)",
+  "description": "Many-requirement × many-resource composition primitive with exact lineage and package-level screening. Adapted from humanaios-ui/operations#716.",
+  "type": "object",
+  "required": [
+    "cpk_id",
+    "lineage",
+    "coverage",
+    "composition_screen",
+    "service_surface_classes",
+    "authorization_state",
+    "target_scope_state",
+    "method_permission_state",
+    "authority_effect",
+    "package_sha256"
+  ],
+  "properties": {
+    "cpk_id": { "type": "string", "pattern": "^CPK-[A-Za-z0-9_-]+$" },
+    "lineage": {
+      "type": "object",
+      "description": "Exact DMR → BRQ → BSA → RES chain. Label-only reconstruction is rejected.",
+      "required": ["dmr_ids", "brq_ids", "bsa_ids", "res_ids"]
+    },
+    "coverage": {
+      "type": "object",
+      "properties": {
+        "required_complete": { "type": "boolean" },
+        "optional_gaps": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "composition_screen": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["PASS", "PASS_WITH_CONDITIONS", "FAIL", "UNKNOWN"] },
+        "findings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "service_surface_classes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "NETWORK_TRANSPORT", "WEB_APPLICATION", "API_SERVICE", "REALTIME_EVENT",
+          "AUTH_IDENTITY", "DISCOVERY_METADATA", "CLIENT_BROWSER", "STORAGE_CLOUD",
+          "ADMIN_OPS_MANAGEMENT", "THIRD_PARTY_EMBEDDED",
+          "SIMULATION", "HARDWARE_PROBE", "PASSIVE_MONITORING", "ACTIVE_CONTROL"
+        ]
+      }
+    },
+    "authorization_state": { "const": "NOT_REQUESTED" },
+    "target_scope_state": { "const": "NOT_ESTABLISHED" },
+    "method_permission_state": { "const": "NOT_ESTABLISHED" },
+    "authority_effect": { "const": "NONE" },
+    "package_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}
